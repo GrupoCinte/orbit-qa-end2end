@@ -1,0 +1,42 @@
+
+name: Serenity CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Java 17 + cache Maven (rápido y oficial)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: 'maven'
+
+      # Ejecuta pruebas en headless, mapeando QA_URL -> base.url y filtrando por tags si los defines
+      - name: Run Serenity tests (headless)
+        run: |
+          mvn -B clean verify \
+            -Dbase.url="${{ vars.QA_URL }}" \
+            -Dheadless.mode=true \
+            -Dcucumber.filter.tags="${{ vars.CUCUMBER_TAGS || '@smoke' }}"
+
+      # Publica el reporte como artefacto (Actions v4 recomendado)
+      - name: Upload Serenity report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: serenity-report
+          path: target/site/serenity
+          retention-days: 14
+
