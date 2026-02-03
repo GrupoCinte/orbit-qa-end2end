@@ -95,14 +95,11 @@ public class ConciliacionSteps {
                 "Esperaba error: '" + msg + "' pero obtuve: '" + mensajeActual + "'");
     }
 
-    // --- CORRECCIÓN AQUI ---
     @Entonces("el saldo de la factura {string} en la tabla deberia ser {string}")
     public void verificarSaldo(String idFactura, String saldoEsperado) {
-        // Obtenemos todo el texto de la fila
         String textoFila = conciliacionPage.obtenerSaldoDeTabla(idFactura);
         System.out.println("Texto Fila para validar: " + textoFila);
 
-        // Usamos contains en lugar de assertEquals para buscar el saldo dentro de todo el texto
         Assertions.assertTrue(textoFila.contains(saldoEsperado),
                 "El saldo esperado '" + saldoEsperado + "' no se encontro en la fila: " + textoFila);
     }
