@@ -13,17 +13,25 @@ public class ConfigReader {
             FileInputStream input = new FileInputStream(path);
             properties = new Properties();
             properties.load(input);
+            input.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("ERROR: No se encontró el archivo 'src/test/resources/config.properties'. Asegúrate de haberlo creado.");
+            // Si no encuentra el archivo (ej: en CI), no falla aqui, sino que properties queda vacio o parcial
+            System.out.println("WARN: No se encontro config.properties (Normal en CI si usas Secrets)");
+            if (properties == null) properties = new Properties();
         }
     }
 
     public static String get(String key) {
+        // 1. Intentar leer del archivo properties
         String value = properties.getProperty(key);
+
+        // 2. Si es nulo, intentar leer de Variables de Entorno (CI/CD)
         if (value == null) {
-            throw new RuntimeException("La clave '" + key + "' no existe en el archivo config.properties");
+            // Convertimos 'app.username' a 'APP_USERNAME'
+            String envKey = key.replace(".", "_").toUpperCase();
+            value = System.getenv(envKey);
         }
+
         return value;
     }
 }
