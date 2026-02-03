@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Selenium
+    implementation 'org.seleniumhq.selenium:selenium-java:4.16.1'
+
+    // Cucumber (Core + Java)
+    implementation 'io.cucumber:cucumber-java:7.15.0'
+
+    // Motor para conectar Cucumber con JUnit 5
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.15.0'
+
+    // JUnit 5 (Plataforma y Suite para correr los tests)
+    testImplementation 'org.junit.platform:junit-platform-suite:1.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+}
+
+test {
+    // IMPORTANTE: Activa JUnit Platform
+    useJUnitPlatform()
+
+    // Configuración para ver logs claros en consola
+    systemProperty("cucumber.junit-platform.naming-strategy", "long")
+    testLogging.showStandardStreams = true
+}
