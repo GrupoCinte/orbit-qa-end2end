@@ -1,0 +1,40 @@
+name: Automatizacion Orbit CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Dar permisos a gradlew
+        run: chmod +x gradlew
+
+      - name: Ejecutar Pruebas
+        env:
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          CI: true
+        run: ./gradlew clean test --info
+
+      - name: Subir Reporte
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reporte-cucumber
+          path: build/reports/tests/test/
+          retention-days: 5
