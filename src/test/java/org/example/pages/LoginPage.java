@@ -22,7 +22,6 @@ public class LoginPage {
     }
 
     public void login(String user, String pass) {
-        // Leemos la URL del archivo config.properties
         String url = ConfigReader.get("app.url");
         driver.get(url);
 

@@ -141,16 +141,12 @@ public class ConciliacionPage {
         try {
             WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(btnConfirmarCruceFinal));
             clickJS(btn);
-            // IMPORTANTE: Esperar a que el SweetAlert aparezca antes de continuar
-            // Damos 3 segundos porque la animacion puede tardar
             Thread.sleep(3000);
         } catch (Exception e) {}
     }
 
     public String obtenerMensajeAlerta() {
         try {
-            // Buscamos SweetAlert (Titulo)
-            // Usamos wait corto para reintentar si no aparece de inmediato
             return wait.until(ExpectedConditions.visibilityOfElementLocated(swalTitle)).getText();
         } catch (Exception e) {
             return "No se encontro mensaje";

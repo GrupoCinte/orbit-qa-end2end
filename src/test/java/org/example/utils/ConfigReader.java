@@ -9,7 +9,6 @@ public class ConfigReader {
 
     static {
         try {
-            // Carga el archivo desde la ruta del proyecto
             String path = "src/test/resources/config.properties";
             FileInputStream input = new FileInputStream(path);
             properties = new Properties();
