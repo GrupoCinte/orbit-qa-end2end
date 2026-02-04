@@ -106,18 +106,14 @@ public class ConciliacionPage {
         esperarCarga();
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
 
-        // 1. Buscamos el lápiz (usamos 'presence' por si no está visible en pantalla aún)
         WebElement lapiz = wait.until(ExpectedConditions.presenceOfElementLocated(iconoEditarFilaDerecha));
 
-        // 2. SCROLL OBLIGATORIO: Bajamos la pantalla hasta el elemento
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", lapiz);
         try { Thread.sleep(500); } catch (InterruptedException e) {}
 
-        // 3. Ahora que ya hicimos scroll, hacemos click (usando JS para asegurar)
         wait.until(ExpectedConditions.elementToBeClickable(lapiz));
         clickJS(lapiz);
 
-        // Continuamos con la edición...
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(inputMontoEdicion));
         input.click();
         input.sendKeys(Keys.chord(Keys.CONTROL, "a"));

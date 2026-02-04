@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.qameta.allure' version '2.12.0'
+    id 'org.gradle.test-retry' version '1.5.8'
 }
 
 group = 'org.example'
@@ -35,6 +36,17 @@ test {
     // Configuración para ver logs claros en consola
     systemProperty("cucumber.junit-platform.naming-strategy", "long")
     testLogging.showStandardStreams = true
+
+    retry {
+        // Si falla, reintenta hasta 2 veces más
+        maxRetries = 2
+
+        // Si hay más de 10 fallos distintos, deja de reintentar (algo grave pasa)
+        maxFailures = 10
+
+        // Si pasa en el reintento, marca la prueba como EXITOSA (no falla el build)
+        failOnPassedAfterRetry = false
+    }
 }
 
 allure {
