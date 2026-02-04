@@ -1,6 +1,6 @@
 package org.example.pages;
 
-import org.example.utils.ConfigReader; // Importamos el lector
+import org.example.utils.ConfigReader;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,16 +21,35 @@ public class LoginPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public void login(String user, String pass) {
+    public void login(String userLocal, String passLocal) {
         String url = ConfigReader.get("app.url");
         driver.get(url);
 
+        // --- LÓGICA DE SEGURIDAD (SECRETS) ---
+
+        String finalUser = System.getenv("APP_USERNAME");
+        String finalPass = System.getenv("APP_PASSWORD");
+
+        if (finalUser == null || finalUser.isEmpty()) {
+            System.out.println("⚠️ Modo Local: Usando credenciales de configuración.");
+            finalUser = userLocal;
+        } else {
+            System.out.println("🔒 Modo CI: Usando credenciales seguras de GitHub.");
+        }
+
+        if (finalPass == null || finalPass.isEmpty()) {
+            finalPass = passLocal;
+        }
+
+        // --- INTERACCIÓN CON EL NAVEGADOR ---
+
         WebElement userElement = wait.until(ExpectedConditions.visibilityOfElementLocated(usernameField));
         userElement.clear();
-        userElement.sendKeys(user);
+        userElement.sendKeys(finalUser);
 
-        driver.findElement(passwordField).clear();
-        driver.findElement(passwordField).sendKeys(pass);
+        WebElement passElement = driver.findElement(passwordField);
+        passElement.clear();
+        passElement.sendKeys(finalPass);
 
         driver.findElement(loginButton).click();
     }
