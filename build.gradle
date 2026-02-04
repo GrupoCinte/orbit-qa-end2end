@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'io.qameta.allure' version '2.12.0'
+    id 'org.gradle.test-retry' version '1.5.8'
 }
 
 group = 'org.example'
@@ -29,12 +30,19 @@ dependencies {
 }
 
 test {
-    // IMPORTANTE: Activa JUnit Platform
     useJUnitPlatform()
 
-    // Configuración para ver logs claros en consola
-    systemProperty("cucumber.junit-platform.naming-strategy", "long")
-    testLogging.showStandardStreams = true
+    // Configuración para Allure
+    systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+    // Reintentos
+    retry {
+        maxRetries = 2
+        maxFailures = 10
+        failOnPassedAfterRetry = false
+    }
 }
 
 allure {
