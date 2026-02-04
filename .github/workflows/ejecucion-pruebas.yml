@@ -46,9 +46,18 @@ jobs:
           allure_report: allure-report
           allure_history: allure-history
 
-      - name: Publicar rama gh-pages
+      - name: Guardar Reporte como Artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reporte-allure-html
+          path: allure-report/
+          retention-days: 20
+
+      - name: Publicar GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         if: always()
+        continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages

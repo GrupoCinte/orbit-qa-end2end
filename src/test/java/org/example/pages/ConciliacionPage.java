@@ -25,6 +25,7 @@ public class ConciliacionPage {
 
     // Tabla y Edición
     private By btnMoverDerecha = By.xpath("//button[@title='Agregar Cruce Seleccionado']");
+    // Selector ajustado para asegurar que lo encuentre
     private By iconoEditarFilaDerecha = By.xpath("//div[contains(@id,'CruTabAgr')]//a[contains(@class,'ui-row-editor-pencil')]");
     private By iconoGuardarFilaDerecha = By.xpath("//div[contains(@id,'CruTabAgr')]//a[contains(@class,'ui-row-editor-check')]");
     private By inputMontoEdicion = By.xpath("//div[contains(@id,'CruTabAgr')]//input[contains(@id,'input')]");
@@ -100,21 +101,35 @@ public class ConciliacionPage {
         } catch (Exception e) {}
     }
 
+    // --- MÉTODO CORREGIDO CON SCROLL ---
     public void ingresarMonto(String monto) {
         esperarCarga();
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
-        WebElement lapiz = wait.until(ExpectedConditions.elementToBeClickable(iconoEditarFilaDerecha));
+
+        // 1. Buscamos el lápiz (usamos 'presence' por si no está visible en pantalla aún)
+        WebElement lapiz = wait.until(ExpectedConditions.presenceOfElementLocated(iconoEditarFilaDerecha));
+
+        // 2. SCROLL OBLIGATORIO: Bajamos la pantalla hasta el elemento
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", lapiz);
+        try { Thread.sleep(500); } catch (InterruptedException e) {}
+
+        // 3. Ahora que ya hicimos scroll, hacemos click (usando JS para asegurar)
+        wait.until(ExpectedConditions.elementToBeClickable(lapiz));
         clickJS(lapiz);
+
+        // Continuamos con la edición...
         WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(inputMontoEdicion));
         input.click();
         input.sendKeys(Keys.chord(Keys.CONTROL, "a"));
         input.sendKeys(Keys.BACK_SPACE);
         input.sendKeys(monto);
         input.sendKeys(Keys.TAB);
+
         WebElement check = wait.until(ExpectedConditions.elementToBeClickable(iconoGuardarFilaDerecha));
         clickJS(check);
         esperarCarga();
     }
+    // -----------------------------------
 
     public void clicAplicarCrucePrincipal() {
         try {
