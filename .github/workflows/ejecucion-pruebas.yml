@@ -2,9 +2,9 @@ name: Automatizacion Orbit CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main", "develop" ]
   workflow_dispatch:
 
 permissions:
@@ -33,8 +33,11 @@ jobs:
         env:
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          # Si tienes la URL en secrets úsala, si no, ponla directa aquí abajo
+          BASE_URL: "http://node206897-orbitcinte.w1-us.cloudjiffy.net:8080/ORBIT/"
           CI: true
-        run: ./gradlew clean test --info
+        # ✅ FIX CRÍTICO: Agregamos -Dwebdriver.base.url para evitar el error "Invalid Argument"
+        run: ./gradlew clean test -Dwebdriver.base.url=$BASE_URL --info
         continue-on-error: true
 
       - name: Generar Reporte Allure
