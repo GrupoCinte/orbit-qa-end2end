@@ -1,0 +1,64 @@
+name: Automatizacion Orbit CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Dar permisos a gradlew
+        run: chmod +x gradlew
+
+      - name: Ejecutar Pruebas
+        env:
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          CI: true
+        run: ./gradlew clean test --info
+        continue-on-error: true
+
+      - name: Generar Reporte Allure
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_results: build/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Guardar Reporte como Artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reporte-allure-html
+          path: allure-report/
+          retention-days: 20
+
+      - name: Publicar GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
