@@ -55,7 +55,7 @@ jobs:
           retention-days: 20
 
       - name: Publicar GitHub Pages
-        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108574d95d7162624419f4b
+        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c9208c7a8202f5d
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
