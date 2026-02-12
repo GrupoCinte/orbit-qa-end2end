@@ -1,0 +1,67 @@
+name: Automatizacion Orbit CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Dar permisos a gradlew
+        run: chmod +x gradlew
+
+      - name: Ejecutar Pruebas
+        env:
+          APP_USERNAME: ${{ secrets.APP_USERNAME }}
+          APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          # Si tienes la URL en secrets úsala, si no, ponla directa aquí abajo
+          BASE_URL: "http://node206897-orbitcinte.w1-us.cloudjiffy.net:8080/ORBIT/"
+          CI: true
+        # ✅ FIX CRÍTICO: Agregamos -Dwebdriver.base.url para evitar el error "Invalid Argument"
+        run: ./gradlew clean test -Dwebdriver.base.url=$BASE_URL --info
+        continue-on-error: true
+
+      - name: Generar Reporte Allure
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          gh_pages: gh-pages
+          allure_results: build/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Guardar Reporte como Artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reporte-allure-html
+          path: allure-report/
+          retention-days: 20
+
+      - name: Publicar GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
