@@ -33,8 +33,9 @@ jobs:
         env:
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
+          BASE_URL: "http://node206897-orbitcinte.w1-us.cloudjiffy.net:8080/ORBIT/"
           CI: true
-        run: ./gradlew clean test --info
+        run: ./gradlew clean test -Dwebdriver.base.url=$BASE_URL --info
         continue-on-error: true
 
       - name: Generar Reporte Allure
@@ -55,7 +56,7 @@ jobs:
           retention-days: 20
 
       - name: Publicar GitHub Pages
-        uses: peaceiris/actions-gh-pages@373f7f263a76c20808c831209c9208c7a8202f5d
+        uses: peaceiris/actions-gh-pages@v4
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
