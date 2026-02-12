@@ -39,7 +39,7 @@ jobs:
         continue-on-error: true
 
       - name: Generar Reporte Allure
-        uses: simple-elf/allure-report-action@v1.13
+        uses: simple-elf/allure-report-action@53ebb757a2097edc77c53ecef4d454fc2f2f774c
         if: always()
         with:
           gh_pages: gh-pages
