@@ -39,7 +39,7 @@ jobs:
         continue-on-error: true
 
       - name: Generar Reporte Allure
-        uses: simple-elf/allure-report-action@v1.9.4
+        uses: simple-elf/allure-report-action@58e6590adf6d8f196a0d771bf8a00e6921086a62
         if: always()
         with:
           gh_pages: gh-pages
@@ -56,7 +56,7 @@ jobs:
           retention-days: 20
 
       - name: Publicar GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108574d95d7a85975bd2367
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
