@@ -1,0 +1,10 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"  Yo como analista de facturación
+  Quiero realizar cruces de facturas validando reglas de negocio
+  Para mantener los saldos actualizados y auditados","30586","Validar bloqueo al intentar cruzar montos invalidos","","Thu Feb 12 16:46:38 UTC 2026","passed","Thu Feb 12 16:47:09 UTC 2026","","Gestión Integral de Conciliación de Facturas","Validar bloqueo al intentar cruzar montos invalidos",""
+"  Yo como analista de facturación
+  Quiero realizar cruces de facturas validando reglas de negocio
+  Para mantener los saldos actualizados y auditados","34554","Filtrar facturas por cliente especifico","","Thu Feb 12 16:46:38 UTC 2026","passed","Thu Feb 12 16:47:13 UTC 2026","","Gestión Integral de Conciliación de Facturas","Filtrar facturas por cliente especifico",""
+"  Yo como analista de facturación
+  Quiero realizar cruces de facturas validando reglas de negocio
+  Para mantener los saldos actualizados y auditados","34940","Realizar cruce de factura con asignacion de monto parcial","","Thu Feb 12 16:46:38 UTC 2026","passed","Thu Feb 12 16:47:13 UTC 2026","","Gestión Integral de Conciliación de Facturas","Realizar cruce de factura con asignacion de monto parcial",""
