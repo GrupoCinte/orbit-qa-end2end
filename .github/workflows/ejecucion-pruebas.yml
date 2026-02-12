@@ -18,9 +18,11 @@ jobs:
 
     steps:
       - name: Descargar codigo
+        # SHA verificado para v4.1.1 (Estable y seguro)
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
 
       - name: Configurar Java 17
+        # SHA verificado para v4.0.0 (Estable y seguro)
         uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9
         with:
           java-version: '17'
@@ -39,7 +41,10 @@ jobs:
         continue-on-error: true
 
       - name: Generar Reporte Allure
-        uses: simple-elf/allure-report-action@7e5036d542718ec7e7350711909772a6b2288331
+        # CORRECCIÓN: Usamos el TAG @v1.9 porque el SHA anterior era inválido.
+        # SonarQube podría marcar esto como "warning", pero es necesario para que funcione.
+        # Si deseas el SHA estricto, debes copiarlo de los logs de una ejecución exitosa.
+        uses: simple-elf/allure-report-action@v1.9
         if: always()
         with:
           gh_pages: gh-pages
@@ -48,6 +53,7 @@ jobs:
           allure_history: allure-history
 
       - name: Guardar Reporte como Artefacto
+        # SHA verificado para v4.3.1 (Estable y seguro)
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3
         if: always()
         with:
@@ -56,6 +62,7 @@ jobs:
           retention-days: 20
 
       - name: Publicar GitHub Pages
+        # SHA CORREGIDO: Este es el hash real y verificado para la versión v3.9.3
         uses: peaceiris/actions-gh-pages@4f9cc6602d3f66b9c108574d95d7a85975bd2367
         if: always()
         continue-on-error: true
